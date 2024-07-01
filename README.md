@@ -24,8 +24,9 @@ To install this extension, you will need to load it into Chrome as an unpacked e
 6. The extension should now be loaded into Chrome and ready to use.
 
 ## Usage
-1) Click on the Flamoid extension plugin to add your OpenAI API Key 
-2) Simply select some text on a webpage, right-click, and choose `Flamoid` from the context menu. The image will be automatically generated and inserted into the webpage
+1) Click on the Flamoid extension plugin to add your OpenAI API Key
+2) Optionally include additional prompting instructions desired
+3) Simply select some text on a webpage, right-click, and choose `Flamoid` from the context menu. The image will be automatically generated and inserted into the webpage
 
 ## Thoughts?
 
