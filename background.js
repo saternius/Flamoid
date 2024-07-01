@@ -4,13 +4,25 @@ chrome.runtime.onInstalled.addListener(() => {
     title: "Flamoid",
     contexts: ["selection"]
   });
+  // chrome.contextMenus.create({
+  //   id: "ask",
+  //   title: "Ask",
+  //   contexts: ["selection"]
+  // });
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "flamoid") {
     chrome.scripting.executeScript({
       target: {tabId: tab.id},
-      files: ['content.js']
+      files: ['flamoid.js']
     });
   }
+  
+  // if (info.menuItemId === "ask") {
+  //   chrome.scripting.executeScript({
+  //     target: {tabId: tab.id},
+  //     files: ['utils.js', 'ask.js']
+  //   });
+  // }
 });

@@ -1,5 +1,5 @@
 var FLAMOID_MAX_LEN = 15000
-var FLAMOID_SYSTEM_PROMPT = "You will be given an article encased in <article/> and a selected part that is of interest encased in <selection/>. From the article and the text of focus. Output a brief 300 character description of an image that can be sent to an AI image generator that would make for a good illustration of what is being selected."
+var FLAMOID_SYSTEM_PROMPT = "You will be given an article encased in <article/> a selected part that is of interest encased in <selection/> and optionally additional instructions to follow encased in <instructions/>. From the article, the text of focus, and if given instructions, output a brief 300 character description of an image that can be sent to an AI image generator that would make for a good illustration of what is being selected."
 var extractText = ()=>{
     const potentialContainers = document.querySelectorAll('article, main, [class*="post"], [class*="article"], [id*="post"], [id*="article"]');
     let bestCandidate = null;
@@ -100,7 +100,7 @@ function replaceSelectedTextWithSpan(idx) {
 }
 
 
-chrome.storage.local.get(['apiKey'], function(result) {
+chrome.storage.local.get(['apiKey', 'promptInstructions'], function(result) {
   console.log("I AM RUNNING.")
   let pageContent = extractText()
   if(pageContent){
@@ -112,9 +112,14 @@ chrome.storage.local.get(['apiKey'], function(result) {
     let selectedText =  window.getSelection().toString();
     //console.log(pageContent, selectedText)
     let imageEl = replaceSelectedTextWithSpan(taskId)
+    let instructs = result.promptInstructions;
+    let custom = ""
+    if(instructs && instructs.length > 0){
+      custom = `\n<instructions>${instructs}</instructions>`
+    }
     chat_complete(result.apiKey, [
       {'role':'system', 'content':FLAMOID_SYSTEM_PROMPT}, 
-      {'role':'user', 'content': `<article>${pageContent}</article>\n<selection>${selectedText}</selection>`}, 
+      {'role':'user', 'content': `<article>${pageContent}</article>\n<selection>${selectedText}</selection>${custom}`}, 
     ], (description)=>{
       image_complete(result.apiKey, description, (url)=>{
         imageEl.src = url
